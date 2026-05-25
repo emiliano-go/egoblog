@@ -1,0 +1,75 @@
+baseURL: "https://blog.emiliano-gandini-outeda.uy/"
+languageCode: "en-us"
+title: "Dev Blog"
+theme: "PaperMod"
+
+pagination:
+  pagerSize: 10
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+params:
+  env: production
+  title: "Dev Blog"
+  description: "My Personal blog where I write about whatever I'm learning/working rn."
+  author: "Emiliano Gandini Outeda"
+
+  defaultTheme: dark
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowToc: true
+
+  homeInfoParams:
+    Title: "Welcome to my Dev Blog"
+    Content: >
+      Thoughts, notes, and writing about whatever I'm learning/working rn.
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/emiliano-gandini-outeda"
+    - name: linkedin
+      url: "https://linkedin.com/in/emiliano-gandini-outeda"
+
+menu:
+  main:
+    - identifier: LibreCourseUY
+      name: LibreCourseUY
+      url: /librecourseuy/
+      weight: 10
+
+    - identifier: Studies
+      name: Studies
+      url: /studies/
+      weight: 20
+
+    - identifier: Works
+      name: Works
+      url: /works/
+      weight: 30
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+  highlight:
+    noClasses: false
