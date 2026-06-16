@@ -1,0 +1,24 @@
+{{- with .File }}
+  {{- $key := .Path | replaceRE `\.md$` "" | replaceRE `/` "_" }}
+  {{- with index (hugo.Data).seo $key }}
+    <link rel="canonical" href="{{ .canonical }}">
+    <meta name="description" content="{{ .description }}">
+    {{- with .robots }}
+      <meta name="robots" content="{{ . }}">
+    {{- end }}
+    {{- with .og }}
+      <meta property="og:type" content="{{ .type }}">
+      <meta property="og:url" content="{{ .url }}">
+      <meta property="og:title" content="{{ .title }}">
+      <meta property="og:description" content="{{ .description }}">
+    {{- end }}
+    {{- with .twitter }}
+      <meta name="twitter:card" content="{{ .card }}">
+      <meta name="twitter:title" content="{{ .title }}">
+      <meta name="twitter:description" content="{{ .description }}">
+    {{- end }}
+    {{- with .schema_jsonld }}
+      <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
+    {{- end }}
+  {{- end }}
+{{- end }}
