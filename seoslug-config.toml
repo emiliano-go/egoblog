@@ -1,5 +1,5 @@
-canonical_host = "blog.emiliano-gandini-outeda.uy"
-public_base_url = "https://blog.emiliano-gandini-outeda.uy"
+canonical_host = "blog.emiliano-go.com"
+public_base_url = "https://blog.emiliano-go.com"
 site_name = "Dev Blog"
 title_template = "{title}"
 default_robots = "index,follow"

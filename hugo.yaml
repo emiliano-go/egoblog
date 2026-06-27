@@ -1,4 +1,4 @@
-baseURL: "https://blog.emiliano-gandini-outeda.uy/"
+baseURL: "https://blog.emiliano-go.com/"
 locale: "en-US"
 title: "Emiliano G.O."
 theme: "PaperMod"
@@ -7,6 +7,12 @@ pagination:
   pagerSize: 10
 
 enableRobotsTXT: true
+
+sitemap:
+  changefreq: monthly
+  priority: 0.5
+  filename: sitemap.xml
+
 buildDrafts: false
 buildFuture: false
 buildExpired: false
@@ -25,6 +31,9 @@ params:
     favicon32x32: "/favicon-32x32.png"
   description: "My Personal blog where I write about whatever I'm learning/working rn."
   author: "Emiliano G.O."
+  mainSections:
+    - studies
+    - works
 
   defaultTheme: dark
   disableThemeToggle: false
@@ -65,11 +74,23 @@ menu:
       url: /works/
       weight: 30
 
+mediaTypes:
+  text/plain:
+    suffixes:
+      - txt
+
+outputFormats:
+  LLMS:
+    mediaType: text/plain
+    baseName: llms
+    isPlainText: true
+
 outputs:
   home:
     - HTML
     - RSS
     - JSON
+    - LLMS
 
 markup:
   goldmark:

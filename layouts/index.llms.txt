@@ -1,0 +1,15 @@
+# {{ .Site.Title }}
+
+> {{ .Site.Params.description }}
+
+## Recent posts
+
+{{- range first 10 (where .Site.RegularPages "Section" "in" .Site.Params.mainSections) }}
+- [{{ .Title }}]({{ .Permalink }}): {{ (default .Summary .Description | plainify) | replaceRE "\n" " " | replaceRE "\r" "" }}
+{{- end }}
+
+## Sections
+
+- [Studies]({{ "studies/" | absURL }}): Notes and reflections on what I'm learning
+- [Works]({{ "works/" | absURL }}): Projects and professional work
+- [LibreCourseUY]({{ "librecourseuy/" | absURL }}): Free and open course platform initiative
