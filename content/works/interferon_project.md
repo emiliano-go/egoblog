@@ -1,0 +1,47 @@
+---
+title: "The Immune System Your Docker Host Deserves"
+subtitle: "Why im building Interferon and the idea that powers it" 
+---
+
+Every Docker Compose stack I’ve ever operated has suffered from the same quiet flaw: when a container fails, the rest of the fleet is blind to it. The database crashes, and the API keeps hammering it with writes, piling errors into logs. A background worker runs out of memory, and the frontend still shows a green checkmark. Docker restarts the dead container (if you’ve asked it nicely) but no one tells the neighbours what happened, why, or when the danger has passed.
+
+We’ve all built workarounds. A healthcheck endpoint here, a hand‑rolled event watcher there, maybe a webhook to Slack that some intern wrote in an afternoon. But these are brittle, one‑way, and entirely unaware of recovery. They can tell you something is broken; they can’t tell you it’s fixed. The fleet remains deaf, and every service reinvents its own primitive ears.
+
+I wanted something more than an alarm bell. I wanted a shared, semantic language of distress and recovery, a signalling layer that every container could understand, in any language, without dependencies. And I wanted it to heal itself when things went wrong, the way living systems do. The answer, it turned out, was already inside us.
+
+## Borrowing from biology
+In your body, when a cell is infected by a virus, it releases small proteins called interferons. These proteins don’t fight the virus directly. They diffuse to neighbouring cells and bind to receptors on their surface, triggering those cells to raise their antiviral defences, slowing protein synthesis, activating immune cells, hardening their membranes. Once the infection is cleared, the signalling stops. The tissue returns quietly to its resting state. That elegant loop - detect a threat, warn the neighbours, prepare a measured response, and stand down when it’s over - is exactly what a container fleet lacks.
+
+Interferon (the project) borrows this loop whole. A sidecar process watches the Docker daemon and, when a container dies, degrades, or encounters a critical error, it emits a typed signal: `db_down`, `api_degraded`, `worker_oom`. It doesn’t restart the container; it doesn’t manage anything. It just says, clearly and immediately, “this cell is in trouble, and here’s why.” Every other container that cares can listen and adapt: the API switches to read‑only mode, the frontend shows a warning banner, the job queue throttles its workers. No one needed to know about the database directly; they simply respond to the signal they’ve evolved to understand.
+
+But the most important half of this loop is the one we usually forget: the all‑clear. Real interferons don’t linger forever. Interferon’s state machine tracks every container from `HEALTHY` to `DOWN`, then through `RECOVERING` and back to `HEALTHY`. Each transition broadcasts a new signal - `<role>_recovering`, `<role>_healthy` - so the fleet can relax when the danger has passed. Signals can even carry a time‑to‑live: if a container emits `db_degraded` because of replica lag, but then the lag clears and the signal isn’t renewed, Interferon automatically sends a `db_degraded_expired` signal. The immune response self‑resolves. The organism returns to baseline.
+
+## The cell that sacrifices itself
+The design goes deeper. If Interferon is an immune system, it must itself be immune to failure. A signalling layer that can go silent and stay silent is worse than no signalling layer at all. So the specification includes a durability contract that sounds almost biological: the watcher will never die *due to its own logic*. When it does die from external causes, it comes back seamlessly, in seconds, with correct state. That’s achieved through careful internal supervision, **crash‑only** design, and a persistent state store that remembers what Docker cannot: things like programmatic degradation signals that no Docker event ever produced.
+
+But there is one failure that no process can detect from inside itself: its event loop might hang. The code that would notice is frozen. In the body, a cell that becomes dangerously dysfunctional undergoes apoptosis, programmed cell death. It dismantles itself quietly, packaging its contents for cleanup, without triggering inflammation. The tissue never even notices.
+
+Interferon borrows this too. A separate, minimal timer thread watches the main event loop, and if it stops ticking, the watcher calls `os._exit()`: it kills itself on purpose. Docker’s restart policy then brings a brand‑new instance back up, which reconciles state and resumes signalling. From the fleet’s perspective, the immune system blinked and re‑woke, and the danger signals were never lost. No external watchdog is *required* (though one is available for the truly paranoid). The watcher is designed to treat its own death as a healing strategy. That is pure apoptosis, and it turns what could be a catastrophic hang into a brief, self‑repairing hiccup.
+
+## Why the metaphor matters
+I could have called this project `docker-event-bus` and named the pieces `relay`, `subscriber`, and `filter`. But that would have missed the entire point. A bare event bus tells you that a container stopped. It doesn’t tell you why it matters, what to do about it, or when you can stop worrying. The biological metaphor forces the design to answer those questions. It gives you a vocabulary - receptors, recovery, TTL, apoptosis - that makes the system’s behaviour predictable and its purpose obvious. When I explain to an engineer why the watcher self‑terminates, I say “apoptosis,” and they nod. The metaphor carries the load of justification. It also acts as a design compass: “What should happen when a TTL signal expires? Well, what happens when an interferon degrades?”
+
+Interferon isn’t just a tool; it’s a philosophy. It says that every container in a Compose stack should be part of a single, self‑healing organism. That the fleet should feel pain and signal it, then heal and announce that too. That infrastructure should be immunologically literate: tolerant enough not to overreact to a 3‑second hiccup, but fast and decisive when a true threat appears.
+
+## What Interferon is and isn't
+Interferon is not an orchestrator. It will never restart your containers, scale them, or replace Kubernetes. It’s not a monitoring tool, a metrics history, or a replacement for Prometheus. It’s a signalling layer: it detects, it classifies, it broadcasts, and it tracks recovery. Your containers remain fully in control of how they respond. All Interferon does is give them the shared language they’ve been missing.
+
+It’s also deliberately single‑host. A single Docker daemon, a single watcher, a single immune system per host. If you need cross‑node signalling, you’re in the land of service meshes and multi‑host orchestrators, and that’s fine, but it’s not this. Interferon is for the thousands of us who run production Compose stacks on a beefy VM and wish the pieces could talk to each other without us writing glue scripts.
+
+## A preview of what’s being built
+Interferon will ship as two artifacts: a small sidecar image that does the watching and broadcasting, and a **Python** SDK that makes it trivial for any container to subscribe to signals and register handlers. But the transport is plain HTTP SSE, so a non‑Python service can listen with nothing more than `curl`. The signal schema is stable JSON. The watcher is self‑contained, supervised internally, and backed by a SQLite state store that remembers what Docker cannot. It will have debounce and circuit‑breaker logic to stop a transient blip from cascading into a fleet‑wide panic, because an *overreacting* immune system is an autoimmune disease, and we’ve all seen a test environment tear itself apart.
+
+I’m building the prototype now: the watcher, the SSE server, the state machine that walks a container from `HEALTHY` to `DOWN` to `RECOVERING` to `HEALTHY`, and the apoptosis logic that makes the whole thing self‑healing. The first demo will simulate a database crash, watch the API receive a `db_down` signal and switch to read‑only, then see the database recover and emit db_recovering and `db_healthy`, all without a human touching a keyboard.
+
+If that demo feels as natural as I think it will, the rest follows. A Redis transport for production‑grade durability. A tiny watchdog for those who want an external executioner. Prometheus metrics. And eventually, custom probes that turn latency thresholds and HTTP healthcheck results into the same typed signals the fleet already speaks.
+
+---
+
+Interferon is open source and in its earliest days. If you’ve ever stared at a Compose file and wished your containers could simply tell each other when they were hurting, you understand the gap. If you’ve ever written a bash script that polls docker ps and sends a webhook, you know the pain. I think we can do better. I think we can give our container fleets a real immune system. Not a crude alarm, but a nuanced, self‑limiting, self‑healing signalling layer that borrows from four billion years of evolution.
+
+The repository is scaffolding right now (at the time of writing), but the you're free to AMA about the spec, and the ideas are ready for critique. If you’re a systems thinker who gets excited about the marriage of biology and infrastructure, I’d love your eyes on it. Let’s build the immune system your Docker host deserves.
