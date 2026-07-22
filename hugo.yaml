@@ -53,9 +53,9 @@ params:
 
   socialIcons:
     - name: github
-      url: "https://github.com/emiliano-gandini-outeda"
+      url: "https://github.com/emiliano-go"
     - name: linkedin
-      url: "https://linkedin.com/in/emiliano-gandini-outeda"
+      url: "https://linkedin.com/in/emiliano-go"
 
 menu:
   main:
