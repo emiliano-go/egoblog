@@ -41,6 +41,6 @@ If that demo feels as natural as I think it will, the rest follows. A Redis tran
 
 ---
 
-Interferon is open source and in its earliest days. If you’ve ever stared at a Compose file and wished your containers could simply tell each other when they were hurting, you understand the gap. If you’ve ever written a bash script that polls docker ps and sends a webhook, you know the pain. I think we can do better. I think we can give our container fleets a real immune system. Not a crude alarm, but a nuanced, self‑limiting, self‑healing signalling layer that borrows from four billion years of evolution.
+[Interferon is open source](https://github.com/emiliano-go/interferon) and in its earliest days. If you’ve ever stared at a Compose file and wished your containers could simply tell each other when they were hurting, you understand the gap. If you’ve ever written a bash script that polls docker ps and sends a webhook, you know the pain. I think we can do better. I think we can give our container fleets a real immune system. Not a crude alarm, but a nuanced, self‑limiting, self‑healing signalling layer that borrows from four billion years of evolution.
 
 The repository is scaffolding right now (at the time of writing), but the you're free to AMA about the spec, and the ideas are ready for critique. If you’re a systems thinker who gets excited about the marriage of biology and infrastructure, I’d love your eyes on it. Let’s build the immune system your Docker host deserves.
