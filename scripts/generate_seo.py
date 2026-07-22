@@ -65,7 +65,7 @@ def main() -> None:
 
         key = str(md_file.relative_to(content_dir)).replace("/", "_").replace(".md", "")
         out_path = data_dir / f"{key}.json"
-        out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+        out_path.write_text(json.dumps(payload.to_dict(), indent=2, ensure_ascii=False))
         print(f"  wrote  {out_path}", file=sys.stderr)
 
 
