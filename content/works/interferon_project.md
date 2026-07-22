@@ -1,6 +1,5 @@
 ---
 title: "The Immune System Your Docker Host Deserves"
-subtitle: "Why im building Interferon and the idea that powers it" 
 ---
 
 Every Docker Compose stack I’ve ever operated has suffered from the same quiet flaw: when a container fails, the rest of the fleet is blind to it. The database crashes, and the API keeps hammering it with writes, piling errors into logs. A background worker runs out of memory, and the frontend still shows a green checkmark. Docker restarts the dead container (if you’ve asked it nicely) but no one tells the neighbours what happened, why, or when the danger has passed.
