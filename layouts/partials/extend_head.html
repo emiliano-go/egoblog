@@ -1,6 +1,38 @@
+{{- /*
+  Renders the seoslug payload from data/seo/. PaperMod already emits canonical,
+  description, robots, og:title/type/url/description/locale/site_name and
+  twitter:card/title/description, so only the tags it leaves out are added here.
+  Emitting the rest would duplicate them, which is worse than omitting them.
+*/ -}}
 {{- with .File }}
   {{- $key := .Path | replaceRE `\.md$` "" | replaceRE `/` "_" }}
   {{- with index (site.Data).seo $key }}
+    {{- with .og }}
+      {{- with .image }}
+      <meta property="og:image" content="{{ . }}">
+      {{- end }}
+      {{- with (index . "image:alt") }}
+      <meta property="og:image:alt" content="{{ . }}">
+      {{- end }}
+      {{- with (index . "image:width") }}
+      <meta property="og:image:width" content="{{ . }}">
+      {{- end }}
+      {{- with (index . "image:height") }}
+      <meta property="og:image:height" content="{{ . }}">
+      {{- end }}
+    {{- end }}
+    {{- with .twitter }}
+      {{- /* index, not .site: bare .site collides with Hugo's global site variable */ -}}
+      {{- with (index . "site") }}
+      <meta name="twitter:site" content="{{ . }}">
+      {{- end }}
+      {{- with (index . "image") }}
+      <meta name="twitter:image" content="{{ . }}">
+      {{- end }}
+      {{- with (index . "image:alt") }}
+      <meta name="twitter:image:alt" content="{{ . }}">
+      {{- end }}
+    {{- end }}
     {{- with .schema_jsonld }}
       <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
     {{- end }}

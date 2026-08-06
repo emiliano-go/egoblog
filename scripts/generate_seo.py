@@ -8,7 +8,7 @@ import tomllib
 from pathlib import Path
 
 import frontmatter
-from seoslug import SEOConfig, SEOEntity, URLPolicy, build_seo_payload
+from seoslug import OGImage, SEOConfig, SEOEntity, URLPolicy, build_seo_payload
 
 
 def load_config(path: str) -> SEOConfig:
@@ -16,7 +16,10 @@ def load_config(path: str) -> SEOConfig:
         data = tomllib.load(f)
     url_policy_data = data.pop("url_policy", {})
     url_policy = URLPolicy(**url_policy_data)
-    return SEOConfig(**data, url_policy=url_policy)
+    # SEOConfig rejects a plain dict here: it wants an OGImage or a bare URL string.
+    og_image_data = data.pop("default_og_image", None)
+    og_image = OGImage(**og_image_data) if og_image_data else None
+    return SEOConfig(**data, url_policy=url_policy, default_og_image=og_image)
 
 
 def route_for(md_path: Path, content_dir: Path) -> str:

@@ -4,8 +4,17 @@ site_name = "Dev Blog"
 title_template = "{title}"
 default_robots = "index,follow"
 publisher_name = "Emiliano Gandini Outeda"
+publisher_logo = "https://blog.emiliano-go.com/og-image.png"
+locale = "en_US"
+twitter_site = "@emiliano_go_"
 
 [url_policy]
 enforce_https = true
 lowercase_paths = true
 trailing_slash = "never"
+
+[default_og_image]
+url = "https://blog.emiliano-go.com/og-image.png"
+width = 1200
+height = 630
+alt = "Emiliano G.O. Dev Blog"

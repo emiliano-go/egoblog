@@ -1,2 +1,2 @@
-seoslug
+seoslug>=2.1.0
 python-frontmatter

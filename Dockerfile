@@ -8,8 +8,10 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 
 FROM hugomods/hugo:exts AS builder
 WORKDIR /src
-COPY --from=seo /src/data/ ./data/
 COPY . .
+# After COPY . ., so freshly generated SEO data always wins over any stale data/
+# that happened to be in the build context (there is no .dockerignore).
+COPY --from=seo /src/data/ ./data/
 RUN hugo --minify
 
 FROM nginx:alpine

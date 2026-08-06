@@ -96,3 +96,139 @@ button:hover,
     background: var(--border);
     color: var(--accent);
 }
+
+/* ---------------------------------------------------------------------------
+   Light-mode syntax highlighting.
+
+   PaperMod ships Catppuccin Macchiato, whose pastel tokens are tuned for a dark
+   #24273a background. Against this theme's light code background (#d5e3de) all
+   but two of them fell below WCAG AA, with variables at 1.00:1 (invisible).
+   These overrides restore contrast (5.00:1 minimum) using hues that sit with
+   the sage/teal palette. Scoped with :not([data-theme="dark"]) so dark mode,
+   which was already fine, is untouched.
+   --------------------------------------------------------------------------- */
+
+:root:not([data-theme="dark"]) .chroma {
+    color: #04120e;
+    background-color: var(--code-block-bg);
+}
+
+/* Comments */
+:root:not([data-theme="dark"]) .chroma .c,
+:root:not([data-theme="dark"]) .chroma .ch,
+:root:not([data-theme="dark"]) .chroma .cm,
+:root:not([data-theme="dark"]) .chroma .c1,
+:root:not([data-theme="dark"]) .chroma .cs,
+:root:not([data-theme="dark"]) .chroma .cp,
+:root:not([data-theme="dark"]) .chroma .cpf,
+:root:not([data-theme="dark"]) .chroma .sd {
+    color: #41564f;
+    font-style: italic;
+}
+
+/* Keywords */
+:root:not([data-theme="dark"]) .chroma .k,
+:root:not([data-theme="dark"]) .chroma .kc,
+:root:not([data-theme="dark"]) .chroma .kd,
+:root:not([data-theme="dark"]) .chroma .kn,
+:root:not([data-theme="dark"]) .chroma .kp,
+:root:not([data-theme="dark"]) .chroma .kr,
+:root:not([data-theme="dark"]) .chroma .ow {
+    color: #6b1f9c;
+}
+
+/* Types and classes */
+:root:not([data-theme="dark"]) .chroma .kt,
+:root:not([data-theme="dark"]) .chroma .nc,
+:root:not([data-theme="dark"]) .chroma .no,
+:root:not([data-theme="dark"]) .chroma .nn {
+    color: #7a4205;
+}
+
+/* Strings */
+:root:not([data-theme="dark"]) .chroma .s,
+:root:not([data-theme="dark"]) .chroma .sa,
+:root:not([data-theme="dark"]) .chroma .sb,
+:root:not([data-theme="dark"]) .chroma .sc,
+:root:not([data-theme="dark"]) .chroma .s2,
+:root:not([data-theme="dark"]) .chroma .s1,
+:root:not([data-theme="dark"]) .chroma .se,
+:root:not([data-theme="dark"]) .chroma .sh,
+:root:not([data-theme="dark"]) .chroma .si,
+:root:not([data-theme="dark"]) .chroma .sx,
+:root:not([data-theme="dark"]) .chroma .sr,
+:root:not([data-theme="dark"]) .chroma .ss {
+    color: #0c5c33;
+}
+
+/* Functions, attributes, decorators */
+:root:not([data-theme="dark"]) .chroma .nf,
+:root:not([data-theme="dark"]) .chroma .fm,
+:root:not([data-theme="dark"]) .chroma .na {
+    color: #1245ad;
+}
+
+:root:not([data-theme="dark"]) .chroma .nd {
+    color: #6b1f9c;
+    font-weight: bold;
+}
+
+/* Builtins */
+:root:not([data-theme="dark"]) .chroma .nb,
+:root:not([data-theme="dark"]) .chroma .bp,
+:root:not([data-theme="dark"]) .chroma .nl,
+:root:not([data-theme="dark"]) .chroma .ni,
+:root:not([data-theme="dark"]) .chroma .nt {
+    color: #075a66;
+}
+
+/* Numbers */
+:root:not([data-theme="dark"]) .chroma .m,
+:root:not([data-theme="dark"]) .chroma .mb,
+:root:not([data-theme="dark"]) .chroma .mf,
+:root:not([data-theme="dark"]) .chroma .mh,
+:root:not([data-theme="dark"]) .chroma .mi,
+:root:not([data-theme="dark"]) .chroma .il,
+:root:not([data-theme="dark"]) .chroma .mo {
+    color: #8f1750;
+}
+
+/* Plain names, variables, operators, punctuation */
+:root:not([data-theme="dark"]) .chroma .n,
+:root:not([data-theme="dark"]) .chroma .nv,
+:root:not([data-theme="dark"]) .chroma .vc,
+:root:not([data-theme="dark"]) .chroma .vg,
+:root:not([data-theme="dark"]) .chroma .vi,
+:root:not([data-theme="dark"]) .chroma .vm,
+:root:not([data-theme="dark"]) .chroma .o,
+:root:not([data-theme="dark"]) .chroma .p,
+:root:not([data-theme="dark"]) .chroma .nx {
+    color: #04120e;
+}
+
+/* Errors and exceptions */
+:root:not([data-theme="dark"]) .chroma .err,
+:root:not([data-theme="dark"]) .chroma .ne,
+:root:not([data-theme="dark"]) .chroma .gr,
+:root:not([data-theme="dark"]) .chroma .gt {
+    color: #961111;
+}
+
+/* Line numbers and highlight */
+:root:not([data-theme="dark"]) .chroma .ln,
+:root:not([data-theme="dark"]) .chroma .lnt {
+    color: #4d615b;
+}
+
+:root:not([data-theme="dark"]) .chroma .hl {
+    background-color: #c2d6cf;
+}
+
+/* Diff markers */
+:root:not([data-theme="dark"]) .chroma .gd {
+    color: #961111;
+}
+
+:root:not([data-theme="dark"]) .chroma .gi {
+    color: #0c5c33;
+}
