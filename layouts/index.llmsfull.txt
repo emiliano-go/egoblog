@@ -1,0 +1,30 @@
+# {{ .Site.Title }}
+
+> {{ .Site.Params.description }}
+
+## All posts
+
+{{- range (where .Site.RegularPages "Section" "in" .Site.Params.mainSections).ByDate.Reverse }}
+
+### {{ .Title }}
+
+- URL: {{ .Permalink }}
+{{- with .Params.summary }}
+- Summary: {{ . | plainify }}
+{{- end }}
+{{- with .Date }}
+- Date: {{ .Format "2006-01-02" }}
+{{- end }}
+{{- with .Params.keywords }}
+- Keywords: {{ delimit . ", " }}
+{{- end }}
+
+{{ .Content | plainify }}
+
+{{- end }}
+
+## Sections
+
+- [Studies]({{ "studies/" | absURL }}): Notes and reflections on what I'm learning
+- [Works]({{ "works/" | absURL }}): Projects and professional work
+- [LibreCourseUY]({{ "librecourseuy/" | absURL }}): Free and open course platform initiative

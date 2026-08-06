@@ -84,6 +84,10 @@ outputFormats:
     mediaType: text/plain
     baseName: llms
     isPlainText: true
+  LLMSFULL:
+    mediaType: text/plain
+    baseName: llms-full
+    isPlainText: true
 
 outputs:
   home:
@@ -91,6 +95,7 @@ outputs:
     - RSS
     - JSON
     - LLMS
+    - LLMSFULL
 
 markup:
   goldmark:
